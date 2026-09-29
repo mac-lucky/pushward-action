@@ -127,11 +127,11 @@ A failed call fails the step with an error annotation. `fail-on-error: false` tu
 | Output | Value |
 |---|---|
 | `response` | the API response as JSON |
-| `id` | notification id |
+| `id` | notification or scheduled notification id |
 | `slug` | activity or widget slug |
 | `answer` | id of the tapped action, or the chosen option of an approval card |
 | `answer-text` | text typed with the answer |
-| `status` | notification delivery (`all`, `partial`, `none`), activity state (`ongoing`, `ended`) or answer status (`pending`, `answered`) |
+| `status` | notification or email delivery (`all`, `partial`, `none`), activity state (`ongoing`, `ended`), answer status (`pending`, `answered`) or scheduled notification status |
 
 ## Notes
 

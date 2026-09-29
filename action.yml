@@ -14,73 +14,53 @@ inputs:
       pushward command to run, e.g. "notify", "activity start", "activity end",
       "widget update", "email send --to ops@example.com --subject Report".
       Shell-split. Keep untrusted values out of it; use the inputs below.
-    required: false
     default: notify
   slug:
     description: >-
       Activity or widget slug. Activity commands default to
       gha-<owner>-<repo>-<run_id>-<job>; set it in matrix jobs.
-    required: false
   title:
     description: Notification title
-    required: false
   body:
     description: Notification body
-    required: false
   subtitle:
     description: Secondary line of a notification, activity or widget
-    required: false
   level:
     description: "Notification interruption level: passive, active, time-sensitive or critical"
-    required: false
   url:
     description: URL opened on tap. Notifications and started activities default to the run's page.
-    required: false
   name:
     description: Activity or widget display name. activity start defaults to the workflow name.
-    required: false
   template:
     description: Activity or widget template, e.g. generic, steps, approval, gauge
-    required: false
   text:
     description: Status text of an activity, or the plain-text body of an email
-    required: false
   progress:
     description: Activity progress from 0 to 1
-    required: false
   icon:
     description: SF Symbol name, or mdi:<name>
-    required: false
   color:
     description: Accent color, a name (green, red, ...) or #RRGGBB
-    required: false
   status:
     description: "For activity end: success, failure or cancelled. Pass job.status."
-    required: false
   wait:
     description: >-
       How long to wait for an answer, e.g. 15m. For notify this needs actions;
       for activity wait it is the timeout. The step fails if nobody answers.
-    required: false
   actions:
     description: >-
       Answer buttons, one id=Title per line. Notification actions, or the
       options of an approval activity.
-    required: false
   fields:
     description: >-
       Extra typed fields, one key=value per line, with dotted keys
       (content.total_steps=4, push=false, metadata.env="prod").
-    required: false
   json:
     description: Request body as JSON. Inputs and fields are applied on top of it.
-    required: false
   api-url:
     description: API base URL
-    required: false
   fail-on-error:
     description: Fail the step when the call fails. Set to false to only warn.
-    required: false
     default: "true"
 
 outputs:
