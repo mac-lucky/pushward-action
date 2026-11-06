@@ -89,6 +89,34 @@ If nobody answers in time the step fails. With `fail-on-error: false` it passes 
 
 The same works with an approval card on the Lock Screen: `command: activity start --template approval`, `actions` as its options, then `command: activity wait` with `wait: 30m`.
 
+A question nobody answered stays on the phone after the step gives up, and an answered one can still sit on your other devices. Send it with a collapse id of its own and take it back in the next step, which runs however the wait ended, cancelled runs included:
+
+```yaml
+- id: ask
+  uses: mac-lucky/pushward-action@v1
+  with:
+    token: ${{ secrets.PUSHWARD_TOKEN }}
+    command: notify --collapse-id deploy-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}
+    title: Deploy ${{ github.ref_name }} to production?
+    body: ${{ github.event.head_commit.message }}
+    actions: |
+      deploy=Deploy
+      skip=Skip
+    wait: 30m
+
+- uses: mac-lucky/pushward-action@v1
+  if: always() && (steps.ask.outputs.id != '' || steps.ask.outcome == 'cancelled')
+  with:
+    token: ${{ secrets.PUSHWARD_TOKEN }}
+    command: notification retract deploy-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}
+    fail-on-error: false
+
+- if: steps.ask.outputs.answer == 'deploy'
+  run: ./deploy.sh
+```
+
+The run id, attempt and job id come from GitHub and your workflow, so they are safe in `command`. With the attempt in the id a re-run asks under a new id instead of the one just taken back, and with the job id two jobs asking in one run do not replace or take back each other's question. Matrix legs share the job id, and so do two calls of one reusable workflow, so add `${{ strategy.job-index }}` or a workflow input there, as with the slug above. A collapse id is at most 64 characters. The `id` output is set once the question went out, answered or not, so a send that failed spends no retract. `notification retract` came in pushward-cli 1.8.0, so it needs `@v1` or `@v1.8.0` and later. It is best effort: Apple Watch, an app that was force-quit, and PushWard on iPhone, iPad or Mac before 1.20 keep the notification, and an account can retract 10 times a minute.
+
 ## Update a widget
 
 ```yaml
